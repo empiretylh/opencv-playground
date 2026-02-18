@@ -14,13 +14,13 @@ function App() {
         return <Dashboard onNavigate={setCurrentView} />
       case 'lessons':
         return (
-          <Suspense fallback={<div>Loading lessons...</div>}>
+          <Suspense fallback={<div className="text-center py-12 text-gray-500">Loading lessons...</div>}>
             <Lessons />
           </Suspense>
         )
       case 'projects':
         return (
-          <Suspense fallback={<div>Loading projects...</div>}>
+          <Suspense fallback={<div className="text-center py-12 text-gray-500">Loading projects...</div>}>
             <MiniProjects />
           </Suspense>
         )
@@ -30,9 +30,9 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <Navbar onNavigate={setCurrentView} currentView={currentView} />
-      <main className="container mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {renderView()}
       </main>
     </div>
