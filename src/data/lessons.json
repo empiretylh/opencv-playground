@@ -1,0 +1,50 @@
+[
+  {
+    "id": "image-loading",
+    "title": "Image Loading and Display",
+    "description": "Learn how to load and display images using OpenCV.js",
+    "markdown": "# Image Loading and Display\n\nThis lesson covers the basics of loading images from canvas and displaying them.\n\n## Steps:\n1. Get image from canvas\n2. Process with OpenCV\n3. Display result\n\n## Code Example\n\n```javascript\nlet src = cv.imread('canvasInput');\ncv.imshow('canvasOutput', src);\nsrc.delete();\n```",
+    "code": "let src = cv.imread('canvasInput');\ncv.imshow('canvasOutput', src);\nsrc.delete();",
+    "inputs": ["image"]
+  },
+  {
+    "id": "grayscale",
+    "title": "Converting to Grayscale",
+    "description": "Convert color images to grayscale",
+    "markdown": "# Converting to Grayscale\n\nGrayscale conversion removes color information.\n\n## Code:\n\n```javascript\nlet src = cv.imread('canvasInput');\nlet dst = new cv.Mat();\ncv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY);\ncv.imshow('canvasOutput', dst);\nsrc.delete();\ndst.delete();\n```",
+    "code": "let src = cv.imread('canvasInput');\nlet dst = new cv.Mat();\ncv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY);\ncv.imshow('canvasOutput', dst);\nsrc.delete();\ndst.delete();",
+    "inputs": ["image"]
+  },
+  {
+    "id": "blur",
+    "title": "Image Blurring",
+    "description": "Apply blur filters to images",
+    "markdown": "# Image Blurring\n\nBlurring reduces noise and detail.\n\n## Code:\n\n```javascript\nlet src = cv.imread('canvasInput');\nlet dst = new cv.Mat();\nlet ksize = new cv.Size(5, 5);\ncv.GaussianBlur(src, dst, ksize, 0);\ncv.imshow('canvasOutput', dst);\nsrc.delete();\ndst.delete();\n```",
+    "code": "let src = cv.imread('canvasInput');\nlet dst = new cv.Mat();\nlet ksize = new cv.Size(5, 5);\ncv.GaussianBlur(src, dst, ksize, 0);\ncv.imshow('canvasOutput', dst);\nsrc.delete();\ndst.delete();",
+    "inputs": ["image"]
+  },
+  {
+    "id": "edge-detection",
+    "title": "Edge Detection with Canny",
+    "description": "Detect edges in images using Canny algorithm",
+    "markdown": "# Edge Detection\n\nCanny edge detection finds edges.\n\n## Code:\n\n```javascript\nlet src = cv.imread('canvasInput');\nlet dst = new cv.Mat();\ncv.Canny(src, dst, 50, 100);\ncv.imshow('canvasOutput', dst);\nsrc.delete();\ndst.delete();\n```",
+    "code": "let src = cv.imread('canvasInput');\nlet dst = new cv.Mat();\ncv.Canny(src, dst, 50, 100);\ncv.imshow('canvasOutput', dst);\nsrc.delete();\ndst.delete();",
+    "inputs": ["image"]
+  },
+  {
+    "id": "thresholding",
+    "title": "Image Thresholding",
+    "description": "Apply thresholding to create binary images",
+    "markdown": "# Image Thresholding\n\nThresholding creates binary images.\n\n## Code:\n\n```javascript\nlet src = cv.imread('canvasInput');\nlet dst = new cv.Mat();\ncv.cvtColor(src, src, cv.COLOR_RGBA2GRAY);\ncv.threshold(src, dst, 120, 200, cv.THRESH_BINARY);\ncv.imshow('canvasOutput', dst);\nsrc.delete();\ndst.delete();\n```",
+    "code": "let src = cv.imread('canvasInput');\nlet dst = new cv.Mat();\ncv.cvtColor(src, src, cv.COLOR_RGBA2GRAY);\ncv.threshold(src, dst, 120, 200, cv.THRESH_BINARY);\ncv.imshow('canvasOutput', dst);\nsrc.delete();\ndst.delete();",
+    "inputs": ["image"]
+  },
+  {
+    "id": "morphology",
+    "title": "Morphological Operations",
+    "description": "Apply erosion and dilation",
+    "markdown": "# Morphological Operations\n\nErosion and dilation modify shapes.\n\n## Code:\n\n```javascript\nlet src = cv.imread('canvasInput');\nlet dst = new cv.Mat();\nlet kernel = cv.Mat.ones(5, 5, cv.CV_8U);\ncv.erode(src, dst, kernel);\ncv.imshow('canvasOutput', dst);\nsrc.delete();\ndst.delete();\nkernel.delete();\n```",
+    "code": "let src = cv.imread('canvasInput');\nlet dst = new cv.Mat();\nlet kernel = cv.Mat.ones(5, 5, cv.CV_8U);\ncv.erode(src, dst, kernel);\ncv.imshow('canvasOutput', dst);\nsrc.delete();\ndst.delete();\nkernel.delete();",
+    "inputs": ["image"]
+  }
+]
