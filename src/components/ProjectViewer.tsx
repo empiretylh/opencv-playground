@@ -1,15 +1,16 @@
-import React, { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Editor from '@monaco-editor/react'
 
 interface ProjectViewerProps {
-  project: any
-  onBack: () => void
-}
-
-declare global {
-  interface Window {
-    cv: any
+  project: {
+    id: string
+    title: string
+    description: string
+    code: string
+    inputs: string[]
+    libraries: string[]
   }
+  onBack: () => void
 }
 
 const ProjectViewer: React.FC<ProjectViewerProps> = ({ project, onBack }) => {
@@ -71,6 +72,14 @@ const ProjectViewer: React.FC<ProjectViewerProps> = ({ project, onBack }) => {
     }
 
     try {
+      const canvasInput = canvasInputRef.current
+      const canvasOutput = canvasOutputRef.current
+      if (canvasInput) {
+        canvasInput.id = 'canvasInput'
+      }
+      if (canvasOutput) {
+        canvasOutput.id = 'canvasOutput'
+      }
       const execute = new Function('cv', 'canvasInput', 'canvasOutput', 'video', code)
       execute(window.cv, canvasInputRef.current, canvasOutputRef.current, videoRef.current)
       setOutput('Code executed successfully!')
@@ -81,49 +90,88 @@ const ProjectViewer: React.FC<ProjectViewerProps> = ({ project, onBack }) => {
 
   return (
     <div>
-      <button onClick={onBack} className="mb-4 text-blue-600 hover:text-blue-800">← Back to Projects</button>
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">{project.title}</h2>
+      <button
+        onClick={onBack}
+        className="mb-6 inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-medium transition-colors"
+      >
+        ← Back to Projects
+      </button>
+      <h2 className="text-2xl font-bold text-gray-800 mb-2">{project.title}</h2>
+      <p className="text-gray-500 mb-6">{project.description}</p>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div>
-          <p className="text-gray-600 mb-4">{project.description}</p>
+        {/* Left: Input */}
+        <div className="space-y-6">
           {project.inputs.includes('image') && (
-            <div className="mb-4">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                ref={fileInputRef}
-                className="mb-2"
-              />
-              <canvas ref={canvasInputRef} className="border border-gray-300 max-w-full" />
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">Input Image</h3>
+              <label className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors font-medium text-sm">
+                Upload Image
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  ref={fileInputRef}
+                  className="hidden"
+                />
+              </label>
+              <div className="mt-4">
+                <canvas ref={canvasInputRef} className="border border-gray-200 rounded-lg max-w-full bg-gray-50" />
+              </div>
             </div>
           )}
           {project.inputs.includes('video') && (
-            <div className="mb-4">
-              <button onClick={startVideo} className="bg-green-600 text-white px-4 py-2 rounded-md mb-2">Start Camera</button>
-              <video ref={videoRef} className="border border-gray-300 max-w-full" />
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">Camera</h3>
+              <button
+                onClick={startVideo}
+                className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-lg hover:bg-green-100 transition-colors font-medium text-sm"
+              >
+                📹 Start Camera
+              </button>
+              <div className="mt-4">
+                <video ref={videoRef} className="border border-gray-200 rounded-lg max-w-full bg-gray-50" />
+              </div>
             </div>
           )}
         </div>
-        <div>
-          <h3 className="text-lg font-semibold mb-2">Code Editor</h3>
-          <Editor
-            height="400px"
-            language="javascript"
-            value={code}
-            onChange={(value) => setCode(value || '')}
-            theme="vs-dark"
-          />
-          <button
-            onClick={runCode}
-            className="mt-4 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
-          >
-            Run Code
-          </button>
-          <div className="mt-4">
-            <h3 className="text-lg font-semibold mb-2">Output</h3>
-            <canvas ref={canvasOutputRef} className="border border-gray-300 max-w-full" />
-            <p className="mt-2 text-gray-700">{output}</p>
+
+        {/* Right: Editor + Output */}
+        <div className="space-y-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 bg-gray-800">
+              <h3 className="text-sm font-semibold text-gray-200">Code Editor</h3>
+              <button
+                onClick={runCode}
+                className="bg-green-500 hover:bg-green-600 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-colors"
+              >
+                ▶ Run
+              </button>
+            </div>
+            <Editor
+              height="400px"
+              language="javascript"
+              value={code}
+              onChange={(value: string | undefined) => setCode(value || '')}
+              theme="vs-dark"
+              options={{
+                minimap: { enabled: false },
+                fontSize: 14,
+                lineNumbers: 'on',
+                scrollBeyondLastLine: false,
+                wordWrap: 'on',
+              }}
+            />
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-3">Output</h3>
+            <canvas ref={canvasOutputRef} className="border border-gray-200 rounded-lg max-w-full bg-gray-50" />
+            {output && (
+              <p className={`mt-3 text-sm font-medium ${output.startsWith('Error') ? 'text-red-600' : 'text-green-600'}`}>
+                {output}
+              </p>
+            )}
           </div>
         </div>
       </div>
