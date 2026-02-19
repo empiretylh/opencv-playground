@@ -80,11 +80,16 @@ const ProjectViewer: React.FC<ProjectViewerProps> = ({ project, onBack }) => {
       if (canvasOutput) {
         canvasOutput.id = 'canvasOutput'
       }
+      if (!canvasInput && !canvasOutput && !videoRef.current) {
+        setOutput('No input or output target available to run the code.')
+        return
+      }
       const execute = new Function('cv', 'canvasInput', 'canvasOutput', 'video', code)
       execute(window.cv, canvasInputRef.current, canvasOutputRef.current, videoRef.current)
       setOutput('Code executed successfully!')
     } catch (error) {
-      setOutput(`Error: ${error}`)
+      const msg = error instanceof Error ? error.message : String(error)
+      setOutput(`Error: ${msg}`)
     }
   }
 
